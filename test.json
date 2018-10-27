@@ -1,0 +1,2 @@
+{"date":{"date":{"year":2018,"month":10,"day":26},"time":{"hour":10,"minute":46,"second":30,"nano":58867300}},"montant":{"name":"","value":150.54,"valid":true},"type":"CARTE","libelle":{"name":"","value":"Test","valid":true}}
+{"date":{"date":{"year":2018,"month":10,"day":26},"time":{"hour":10,"minute":46,"second":30,"nano":60867500}},"montant":{"name":"","value":64.2,"valid":true},"type":"VIREMENT","libelle":{"name":"","value":"Test 2","valid":true}}

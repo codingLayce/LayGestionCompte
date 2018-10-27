@@ -1,0 +1,43 @@
+.btn{
+	-fx-background-size: 24px;
+	-fx-background-repeat: no-repeat;
+	-fx-background-position: center;
+	-fx-background-color: transparent;
+	-fx-pref-width: 24px;
+	-fx-pref-height: 24px;
+}
+
+.btn:hover{
+	-fx-background-color: rgba(12, 255, 255, 15);
+	-fx-border-color: rgb(0, 50, 255);
+	-fx-border-width: 0.5;
+}
+
+.btn:pressed{
+	-fx-scale-x: 0.9;
+	-fx-scale-y: 0.9;
+}
+
+#btnNouveau{
+	-fx-background-image: url("icon/nouveau.png");
+}
+
+#btnOuvrir{
+	-fx-background-image: url("icon/ouvrir.png");
+}
+
+#btnSauvegarder{
+	-fx-background-image: url("icon/sauvegarder.png");
+}
+
+#btnSauvegarderSous{
+	-fx-background-image: url("icon/sauvegarderSous.png");
+}
+
+#btnAjouterTransaction{
+	-fx-background-image: url("icon/ajouter.png");
+}
+
+#btnSupprimerTransaction{
+	-fx-background-image: url("icon/supprimer.png");
+}
