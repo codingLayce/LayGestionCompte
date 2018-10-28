@@ -17,9 +17,13 @@ public class Compte {
     private static Compte instance;
 
     private LinkedList<Transaction> transactions;
+    private boolean modified;
+    private File openFile;
 
     private Compte(){
-        transactions = new LinkedList<>();
+        this.transactions = new LinkedList<>();
+        this.modified = false;
+        this.openFile = null;
     }
 
     /**
@@ -28,6 +32,7 @@ public class Compte {
      */
     public void ajouterTransaction(Transaction transaction){
         this.transactions.add(transaction);
+        this.modified = true;
     }
 
     /**
@@ -37,6 +42,7 @@ public class Compte {
     public void retirerTransaction(Transaction transaction) throws TransactionException {
         if (this.transactions.contains(transaction)){
             this.transactions.remove(transaction);
+            this.modified = true;
         } else {
             throw new TransactionException("La transaction selectionne ne fait pas partie du compte");
         }
@@ -55,6 +61,7 @@ public class Compte {
             writer.println(gson.toJson(t));
         }
         writer.close();
+        this.modified = false;
     }
 
     /**
@@ -72,12 +79,14 @@ public class Compte {
             this.transactions.add(t);
         }
         reader.close();
+        this.openFile = f;
     }
 
     /* GETTERS & SETTERS */
     public LinkedList<Transaction> getTransactions() {
-        return transactions;
+        return this.transactions;
     }
+    public boolean hasBeenModified(){ return this.modified; }
 
     /**
      * Implémentation du patron singleton.

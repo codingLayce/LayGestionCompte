@@ -2,6 +2,9 @@ package fr.layce.V2_0.vue;
 
 import fr.layce.V2_0.controleur.ControleurFX;
 import fr.layce.V2_0.modele.Transaction;
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -65,11 +68,15 @@ public class Fenetre extends BorderPane {
     }
 
     /**
-     * Défini la propriété que la barre d'état va observer.
-     * @param property à oberserver.
+     * Défini les propriétés observable par la fenetre.
+     * @param statut propriété de la barre d'état.
+     * @param sauvegarder propriété des boutons sauvegarder.
+     * @param sauvegarderSous propriété des boutons sauvegarder-sous.
      */
-    public void setStatut(StringProperty property){
-        this.statut_bar.setStatutProperty(property);
+    public void setProperties(SimpleStringProperty statut, SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
+        this.statut_bar.setStatutProperty(statut);
+        this.menu_bar.setProperties(sauvegarder, sauvegarderSous);
+        this.outil_bar.setProperties(sauvegarder, sauvegarderSous);
     }
 
     /**
@@ -89,4 +96,7 @@ public class Fenetre extends BorderPane {
     public void setData(ObservableList<Transaction> transactions){
         this.informations_pane.setData(transactions);
     }
+
+    public MenuBar getMenuBar(){ return this.menu_bar; }
+    public OutilBar getOutilBar() { return this.outil_bar; }
 }

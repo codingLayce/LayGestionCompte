@@ -1,6 +1,7 @@
 package fr.layce.V2_0.vue;
 
 import fr.layce.V2_0.controleur.ControleurFX;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
@@ -11,16 +12,23 @@ import javafx.scene.control.Tooltip;
  * Souvent placée en dessus de la barre de menu.
  * @author Layce17
  */
-class OutilBar extends ToolBar {
+public class OutilBar extends ToolBar {
     private ControleurFX ctrl;
+
+    private Button sauvegarder;
+    private Button sauvegarderSous;
 
     OutilBar(){
         super();
         ajouterItem("btnNouveau", "Créer un nouveau compte").setOnAction(e -> this.ctrl.nouveauFichier());
         ajouterItem("btnOuvrir", "Ouvre un compte existant").setOnAction(e -> this.ctrl.ouvrirFichier());
         ajouterSeparateur();
-        ajouterItem("btnSauvegarder", "Sauvegarde le compte courant").setOnAction(e -> this.ctrl.sauvegarderCompte());
-        ajouterItem("btnSauvegarderSous", "Sauvegarde le compte courant à l'emplacement voulu");
+        this.sauvegarder = ajouterItem("btnSauvegarder", "Sauvegarde le compte courant");
+        this.sauvegarder.setOnAction(e -> this.ctrl.sauvegarderCompte());
+        this.sauvegarder.setDisable(true);
+        this.sauvegarderSous = ajouterItem("btnSauvegarderSous", "Sauvegarde le compte courant à l'emplacement voulu");
+        this.sauvegarderSous.setOnAction(e -> this.ctrl.sauvegarderSousCompte());
+        this.sauvegarderSous.setDisable(true);
         ajouterSeparateur();
         ajouterItem("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction").setOnAction(e -> this.ctrl.ajouterTransaction());
     }
@@ -40,7 +48,12 @@ class OutilBar extends ToolBar {
     }
 
     /* GETTERS & SETTERS */
-    public void setControleur(ControleurFX ctrl){
+    void setControleur(ControleurFX ctrl){
         this.ctrl = ctrl;
+    }void setProperties(SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous){
+        this.sauvegarder.disableProperty().bind(sauvegarder);
+        this.sauvegarderSous.disableProperty().bind(sauvegarderSous);
     }
+    public void setSauvegarderDisable(boolean b) { this.sauvegarder.setDisable(b); }
+    public void setSauvegarderSousDisable(boolean b) { this.sauvegarderSous.setDisable(b); }
 }

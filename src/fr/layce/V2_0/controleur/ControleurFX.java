@@ -6,9 +6,10 @@ import fr.layce.V2_0.modele.exceptions.TransactionException;
 import fr.layce.V2_0.vue.Fenetre;
 import fr.layce.V2_0.vue.dialog.AssistantTransaction;
 import fr.layce.V2_0.vue.dialog.Dialogs;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.stage.DirectoryChooser;
+import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -27,12 +28,18 @@ public class ControleurFX {
     private Fenetre fenetre;
 
     private SimpleStringProperty statut;
+    private SimpleBooleanProperty disableSauvegarder;
+    private SimpleBooleanProperty disableSauvegarderSous;
 
     private ControleurFX(){
         this.compte = null;
         this.fenetre = Fenetre.getInstance();
+
         this.statut = new SimpleStringProperty("Chargement OK");
-        this.fenetre.setStatut(statut);
+        this.disableSauvegarder = new SimpleBooleanProperty(true);
+        this.disableSauvegarderSous = new SimpleBooleanProperty(true);
+
+        this.fenetre.setProperties(this.statut, this.disableSauvegarder, this.disableSauvegarderSous);
     }
 
     /**
@@ -40,10 +47,30 @@ public class ControleurFX {
      * Appelée au click dans le menu et la barre d'outils.
      */
     public void nouveauFichier(){
+        if (this.compte != null) {
+            if (this.compte.hasBeenModified()){
+                Optional<ButtonType> result = Dialogs.confirmYesNo("Sauvegarder compte",
+                        "Des modifications ont été faites sur votre compte.", "Voulez-vous les sauvegarder ?");
+                if (result.isPresent()){
+                    if (result.get() == ButtonType.YES){
+                        // TODO: Sauvegarder compte.
+                    }
+                } else {
+                    Dialogs.error("Sauvegarder compte", "Vous devez sélectionner une réponse.");
+                    return;
+                }
+            }
+        }
+
         this.statut.setValue("Création du compte...");
+
         this.compte = Compte.getInstance();
+
         this.fenetre.compteCreated();
         this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+
+        this.disableSauvegarderSous.setValue(false);
+
         this.statut.setValue("Création du compte OK");
     }
 
@@ -53,16 +80,19 @@ public class ControleurFX {
      */
     public void ouvrirFichier(){
         this.statut.setValue("Ouverture d'un compte...");
+
         FileChooser fc = new FileChooser();
         fc.setTitle("Sélectionner un fichier");
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichiers gestion de compte", "*.gtc"));
-        File f = fc.showOpenDialog(null);
-        if (f != null){
+        File chosenFile = fc.showOpenDialog(null);
+        if (chosenFile != null){
             try {
                 this.compte = Compte.getInstance();
-                this.compte.ouvrirCompte(f);
+                this.compte.ouvrirCompte(chosenFile);
+
                 this.fenetre.compteCreated();
                 this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+
                 this.statut.setValue("Compte ouvert");
             } catch (IOException ex){
                 Dialogs.errorMessage("Ouverture de compte", ex);
@@ -74,10 +104,20 @@ public class ControleurFX {
         }
     }
 
+    /**
+     * Affiche l'assistant de transaction pour modifier la transaction.
+     * Appelée à la sélection de l'option modifier en click droit sur la transaction.
+     * @param transaction à modifier.
+     */
     public void modifierTransaction(Transaction transaction){
         // TODO: modifier.
     }
 
+    /**
+     * Supprime une transaction du compte.
+     * Appelée à la sélection de l'option supprimer en clic droit sur la transaction.
+     * @param transaction à supprimer.
+     */
     public void supprimerTransaction(Transaction transaction){
         if (this.compte != null){
             try {
@@ -102,6 +142,31 @@ public class ControleurFX {
                 // TODO: afficher erreur.
             }
         } else{
+            // TODO: afficher compte null.
+        }
+    }
+
+    public void sauvegarderSousCompte(){
+        this.statut.setValue("Sauvegarde du compte...");
+
+        if (this.compte != null){
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Sauvegarder votre compte");
+            fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichiers gestion de compte", "*.gtc"));
+            File chosenFile = fc.showOpenDialog(null);
+            if (chosenFile != null){
+                try {
+                    this.compte.sauvegarderCompte(chosenFile);
+
+                    this.statut.setValue("Compte sauvegarder OK");
+                } catch (IOException e) {
+                    Dialogs.errorMessage("Sauvegarder votre compte", e);
+                    this.statut.setValue("Sauvegarde du compte erreur");
+                }
+            } else {
+                // TODO; afficher fichier null.
+            }
+        } else {
             // TODO: afficher compte null.
         }
     }

@@ -12,6 +12,11 @@ import javafx.scene.layout.GridPane;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+/**
+ * Représente le dialog d'assistant à la création/modification d'une transaction.
+ * Créée à l'ajout et la modification d'une transaction.
+ * @author Layce17
+ */
 public class AssistantTransaction extends Dialog<Transaction> {
     private GridPane grid;
 
@@ -22,12 +27,34 @@ public class AssistantTransaction extends Dialog<Transaction> {
 
     private Node btn_ok;
 
+    /**
+     * Constructeur pour un ajout.
+     * @param title titre du dialog.
+     */
     public AssistantTransaction(String title){
         super();
 
         this.setTitle(title);
         this.setHeaderText(null);
 
+        init();
+    }
+
+    /**
+     * Constructeur pour une modification.
+     * @param title titre du dialog.
+     * @param transaction à modifier.
+     */
+    public AssistantTransaction(String title, Transaction transaction){
+        super();
+        this.setTitle(title);
+        this.setHeaderText(null);
+
+        init();
+        initValues(transaction);
+    }
+
+    private void init(){
         initComp();
         placement();
         initButtons();
@@ -74,25 +101,19 @@ public class AssistantTransaction extends Dialog<Transaction> {
 
     private void initListeners(){
         this.dp.valueProperty().addListener((ob, old, nv) -> {
-            if (this.cb.getValue() != null && !this.tf_mon.getText().isEmpty() && !this.tf_lbl.getText().isEmpty()){
+            if (!this.tf_mon.getText().isEmpty() && !this.tf_lbl.getText().isEmpty()){
                 this.btn_ok.setDisable(false);
             }
         });
 
         this.tf_mon.textProperty().addListener((ob, old, nv) -> {
-            if (this.cb.getValue() != null && this.dp.getValue() != null && !this.tf_lbl.getText().isEmpty()){
+            if (this.dp.getValue() != null && !this.tf_lbl.getText().isEmpty()){
                 this.btn_ok.setDisable(false);
             }
         });
 
         this.tf_lbl.textProperty().addListener((ob, old, nv) -> {
-            if (this.cb.getValue() != null && !this.tf_mon.getText().isEmpty() && this.dp.getValue() != null){
-                this.btn_ok.setDisable(false);
-            }
-        });
-
-        this.cb.valueProperty().addListener((ob, old, nv) -> {
-            if (!this.tf_lbl.getText().isEmpty() && !this.tf_mon.getText().isEmpty() && this.dp.getValue() != null){
+            if (!this.tf_mon.getText().isEmpty() && this.dp.getValue() != null){
                 this.btn_ok.setDisable(false);
             }
         });
@@ -124,6 +145,13 @@ public class AssistantTransaction extends Dialog<Transaction> {
                 nv = st.toString();
             }
         });
+    }
+
+    private void initValues(Transaction transaction){
+        this.cb.setValue(transaction.getType());
+        this.dp.setValue(transaction.getDateTime().toLocalDate());
+        this.tf_lbl.setText(transaction.getLibelle());
+        this.tf_mon.setText(String.valueOf(transaction.getMontant()));
     }
 
     private void initResults(){

@@ -1,6 +1,7 @@
 package fr.layce.V2_0.vue;
 
 import fr.layce.V2_0.controleur.ControleurFX;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -13,8 +14,11 @@ import javafx.scene.input.KeyCombination;
  * Souvent positionné en haut de la fenêtre.
  * @author Layce17
  */
-class MenuBar extends javafx.scene.control.MenuBar {
+public class MenuBar extends javafx.scene.control.MenuBar {
     private ControleurFX ctrl;
+
+    private MenuItem sauvegarder;
+    private MenuItem sauvegarderSous;
 
     MenuBar(){
         super();
@@ -27,13 +31,18 @@ class MenuBar extends javafx.scene.control.MenuBar {
         mi.setOnAction(e -> this.ctrl.ouvrirFichier());
         mi.setAccelerator(KeyCombination.valueOf("ctrl + O"));
         ajouteSeparateur(m);
-        mi = ajouteItem("Enregistrer", m, "sauvegarder.png");
-        mi.setOnAction(e -> this.ctrl.sauvegarderCompte());
-        mi = ajouteItem("Enregistrer-sous", m, "sauvegarderSous.png");
+        this.sauvegarder = ajouteItem("Enregistrer", m, "sauvegarder.png");
+        this.sauvegarder.setOnAction(e -> this.ctrl.sauvegarderCompte());
+        this.sauvegarder.setAccelerator(KeyCombination.valueOf("ctrl + S"));
+        this.sauvegarder.setDisable(true);
+        this.sauvegarderSous = ajouteItem("Enregistrer-sous", m, "sauvegarderSous.png");
+        this.sauvegarderSous.setOnAction(e -> this.ctrl.sauvegarderSousCompte());
+        this.sauvegarderSous.setAccelerator(KeyCombination.valueOf("ctrl + shift + S"));
+        this.sauvegarderSous.setDisable(true);
         ajouteSeparateur(m);
         mi = ajouteItem("Quitter", m);
         mi.setOnAction(e -> this.ctrl.quitter());
-        mi.setAccelerator(KeyCombination.valueOf("ctrl + Q"));
+        mi.setAccelerator(KeyCombination.valueOf("ctrl + alt + shift + Q"));
 
         m = ajouteMenu("Edition");
         mi = ajouteItem("Ajouter transaction", m, "ajouter.png");
@@ -100,7 +109,13 @@ class MenuBar extends javafx.scene.control.MenuBar {
     }
 
     /* GETTERS & SETTERS */
-    public void setControleur(ControleurFX ctrl){
+    void setControleur(ControleurFX ctrl){
         this.ctrl = ctrl;
     }
+    void setProperties(SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous){
+        this.sauvegarder.disableProperty().bind(sauvegarder);
+        this.sauvegarderSous.disableProperty().bind(sauvegarderSous);
+    }
+    public void setSauvegarderDisable(boolean b) { this.sauvegarder.setDisable(b); }
+    public void setSauvegarderSousDisable(boolean b) { this.sauvegarderSous.setDisable(b); }
 }
