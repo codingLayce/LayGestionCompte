@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import fr.layce.V2_0.modele.exceptions.TransactionException;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -51,7 +50,7 @@ public class Compte {
     public void sauvegarderCompte(File f) throws IOException {
         final GsonBuilder builder = new GsonBuilder();
         final Gson gson = builder.create();
-        PrintWriter writer = new PrintWriter(f, StandardCharsets.UTF_8);
+        PrintWriter writer = new PrintWriter(f);
         for (Transaction t : this.transactions){
             writer.println(gson.toJson(t));
         }
