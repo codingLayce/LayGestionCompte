@@ -5,6 +5,7 @@ import fr.layce.V2_0.modele.Transaction;
 import fr.layce.V2_0.modele.exceptions.TransactionException;
 import fr.layce.V2_0.vue.Fenetre;
 import fr.layce.V2_0.vue.dialog.AssistantTransaction;
+import fr.layce.V2_0.vue.dialog.Dialogs;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.Event;
@@ -28,33 +29,38 @@ public class ControleurFX {
 
     private ControleurFX(){
         this.compte = null;
-        this.statut = new SimpleStringProperty("Initialisation");
         this.fenetre = Fenetre.getInstance();
+        this.statut = new SimpleStringProperty("Chargement OK");
         this.fenetre.setStatut(statut);
     }
 
     /**
      * Créer un nouveau fichier.
+     * Appelée au click dans le menu et la barre d'outils.
      */
     public void nouveauFichier(Event e){
+        this.statut.setValue("Création du compte...");
         this.compte = Compte.getInstance();
         this.fenetre.compteCreated();
         this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
-        // TODO: créer un nouveau fichier.
+        this.statut.setValue("Création du compte OK");
     }
 
     /**
      * Ouvre un nouveau fichier.
+     * Appelée au click dans le menu et la barre d'outils.
      */
     public void ouvrirFichier(Event e){
+        this.statut.setValue("Ouverture d'un compte...");
         try {
             this.compte = Compte.getInstance();
-            this.compte.ouvrirCompte(new File("test.json"));
+            this.compte.ouvrirCompte(new File("caca.json"));
             this.fenetre.compteCreated();
             this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+            this.statut.setValue("Compte ouvert");
         } catch (IOException ex){
-            ex.printStackTrace();
-            // TODO: afficher erreur.
+            Dialogs.errorMessage("Ouverture de compte", ex);
+            this.statut.setValue("Impossible d'ouvrir le compte");
         }
     }
 
@@ -92,6 +98,7 @@ public class ControleurFX {
 
     /**
      * Ouvre l'assistant d'ajout de transaction et ajoute la transaction au compte.
+     * Appelée au click dans le menu et la barre d'outils.
      */
     public void ajouterTransaction(Event e){
         if (this.compte != null){
@@ -109,7 +116,7 @@ public class ControleurFX {
 
     /**
      * Quitte l'application.
-     * @param e
+     * Appelée au click dans le menu ou au click de la croix rouge.
      */
     public void quitter(Event e) {
         // TODO: faire les tests de sauvegarde avant de quitter.
