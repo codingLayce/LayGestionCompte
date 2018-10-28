@@ -21,6 +21,8 @@ public class MenuBar extends javafx.scene.control.MenuBar {
   private MenuItem sauvegarder;
   private MenuItem sauvegarderSous;
 
+  private Menu edition;
+
   MenuBar() {
     super();
 
@@ -45,10 +47,11 @@ public class MenuBar extends javafx.scene.control.MenuBar {
     mi.setOnAction(e -> this.ctrl.quitter());
     mi.setAccelerator(KeyCombination.valueOf("ctrl + alt + Q"));
 
-    m = ajouteMenu("Edition");
-    mi = ajouteItem("Ajouter transaction", m, "ajouter.png");
+    this.edition = ajouteMenu("Edition");
+    mi = ajouteItem("Ajouter transaction", this.edition, "ajouter.png");
     mi.setOnAction(e -> this.ctrl.ajouterTransaction());
     mi.setAccelerator(KeyCombination.valueOf("ctrl + shift + A"));
+    this.edition.setDisable(true);
   }
 
   /**
@@ -127,7 +130,7 @@ public class MenuBar extends javafx.scene.control.MenuBar {
   public void setSauvegarderDisable(boolean b) {
     this.sauvegarder.setDisable(b);
   }
-
+  public void setEditionDisable(boolean b) { this.edition.setDisable(b); }
   public void setSauvegarderSousDisable(boolean b) {
     this.sauvegarderSous.setDisable(b);
   }

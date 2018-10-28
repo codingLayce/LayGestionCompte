@@ -56,6 +56,8 @@ public class ControleurFX {
 
     this.fenetre.compteCreated();
     this.fenetre.setData(this.compte.getTransactions());
+    this.fenetre.getMenuBar().setEditionDisable(false);
+    this.fenetre.getOutilBar().setEditionDisable(false);
 
     this.disableSauvegarderSous.setValue(false);
     this.disableSauvegarder.setValue(true);
@@ -84,6 +86,8 @@ public class ControleurFX {
 
         this.fenetre.compteCreated();
         this.fenetre.setData(this.compte.getTransactions());
+        this.fenetre.getMenuBar().setEditionDisable(false);
+        this.fenetre.getOutilBar().setEditionDisable(false);
 
         this.disableSauvegarderSous.setValue(false);
         this.disableSauvegarder.setValue(true);
@@ -93,6 +97,8 @@ public class ControleurFX {
         Dialogs.errorMessage("Ouverture de compte", ex);
         this.statut.setValue("Impossible d'ouvrir le compte");
       }
+    } else {
+      this.statut.setValue("");
     }
   }
 
@@ -118,6 +124,8 @@ public class ControleurFX {
           Dialogs.errorMessage("Modification d'une transaction", e);
           this.statut.setValue("echec de modification d'une transaction");
         }
+      } else {
+        this.statut.setValue("");
       }
     } else {
       Dialogs.error("Modification d'une transaction", "Vous ne pouvez pas modifier cette transaction.", "Aucun compte n'est ouvert.");
@@ -221,6 +229,8 @@ public class ControleurFX {
         this.fenetre.setData(this.compte.getTransactions());
         this.disableSauvegarder.setValue(false);
         this.statut.setValue("ajout d'une transacition OK");
+      } else {
+        this.statut.setValue("");
       }
     } else {
       Dialogs.error("Assiatnt d'ajout de transaction", "Vous ne pouvez pas ajouter de transaction.", "Aucun compte n'est ouvert.");

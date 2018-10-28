@@ -65,7 +65,7 @@ public class Transaction implements Comparable<Transaction> {
 
   public String getDebit() {
     if (this.montant.get() < 0.0)
-      return String.valueOf(this.montant.get());
+      return String.valueOf(this.montant.get()).replace(".", ",") + " €";
     else
       return null;
   }
@@ -74,11 +74,11 @@ public class Transaction implements Comparable<Transaction> {
     if (this.montant.get() < 0.0)
       return null;
     else
-      return String.valueOf(this.montant.get());
+      return String.valueOf(this.montant.get()).replace(".", ",") + " €";
   }
 
   public String getSolde() {
-    return Compte.getInstance().getSolde(this);
+    return Compte.getInstance().getSolde(this).replace(".", ",") + " €";
   }
 
   public SimpleDoubleProperty montantProperty() {

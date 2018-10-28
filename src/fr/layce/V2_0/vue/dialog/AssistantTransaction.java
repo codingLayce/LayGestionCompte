@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,6 +26,9 @@ public class AssistantTransaction extends Dialog<Transaction> {
   private TextField tf_lbl;
   private TextField tf_mon;
   private ChoiceBox<Transaction.Type> cb;
+  private ToggleGroup tg;
+  private RadioButton rb_debit;
+  private RadioButton rb_credit;
 
   private Node btn_ok;
 
@@ -80,7 +84,16 @@ public class AssistantTransaction extends Dialog<Transaction> {
     this.tf_lbl.setPromptText("ex: Courses");
 
     this.tf_mon = new TextField();
-    this.tf_mon.setPromptText("ex: -150.45");
+    this.tf_mon.setPromptText("ex: 150.45");
+
+    this.tg = new ToggleGroup();
+
+    this.rb_credit = new RadioButton("Crédit");
+    this.rb_credit.setToggleGroup(this.tg);
+    this.rb_credit.setSelected(true);
+
+    this.rb_debit = new RadioButton("Débit");
+    this.rb_debit.setToggleGroup(this.tg);
   }
 
   private void initButtons() {
@@ -92,12 +105,17 @@ public class AssistantTransaction extends Dialog<Transaction> {
   private void placement() {
     this.grid.add(new Label("Date:"), 0, 0);
     this.grid.add(this.dp, 1, 0);
-    this.grid.add(new Label("Libelle:"), 0, 1);
-    this.grid.add(this.tf_lbl, 1, 1);
-    this.grid.add(new Label("Type:"), 0, 2);
-    this.grid.add(this.cb, 1, 2);
-    this.grid.add(new Label("Montant:"), 0, 3);
-    this.grid.add(this.tf_mon, 1, 3);
+    HBox hb = new HBox();
+    hb.setSpacing(20);
+    hb.getChildren().addAll(this.rb_credit, this.rb_debit);
+    this.grid.add(new Label("Type:"), 0, 1);
+    this.grid.add(hb, 1,1);
+    this.grid.add(new Label("Libelle:"), 0, 2);
+    this.grid.add(this.tf_lbl, 1, 2);
+    this.grid.add(new Label("Moyen:"), 0, 3);
+    this.grid.add(this.cb, 1, 3);
+    this.grid.add(new Label("Montant:"), 0, 4);
+    this.grid.add(this.tf_mon, 1, 4);
 
     this.getDialogPane().setContent(this.grid);
   }
@@ -162,7 +180,9 @@ public class AssistantTransaction extends Dialog<Transaction> {
       if (e == ButtonType.OK) {
         Type type = this.cb.getValue();
         String libelle = this.tf_lbl.getText();
-        double montant = Double.valueOf(this.tf_mon.getText());
+        double montant = Math.abs(Double.valueOf(this.tf_mon.getText()));
+        if (this.tg.getSelectedToggle().equals(this.rb_debit))
+          montant *= -1;
         LocalDateTime date = LocalDateTime.from(this.dp.getValue().atTime(LocalTime.now()));
         return new Transaction(date, montant, type, libelle);
       } else {
