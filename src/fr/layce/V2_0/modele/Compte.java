@@ -82,6 +82,10 @@ public class Compte {
         this.openFile = f;
     }
 
+    public static void create(){
+      instance = new Compte();
+    }
+
     /* GETTERS & SETTERS */
     public LinkedList<Transaction> getTransactions() {
         return this.transactions;

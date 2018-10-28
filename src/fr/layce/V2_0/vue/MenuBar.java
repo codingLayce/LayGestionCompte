@@ -43,7 +43,7 @@ public class MenuBar extends javafx.scene.control.MenuBar {
     ajouteSeparateur(m);
     mi = ajouteItem("Quitter", m);
     mi.setOnAction(e -> this.ctrl.quitter());
-    mi.setAccelerator(KeyCombination.valueOf("ctrl + alt + shift + Q"));
+    mi.setAccelerator(KeyCombination.valueOf("ctrl + alt + Q"));
 
     m = ajouteMenu("Edition");
     mi = ajouteItem("Ajouter transaction", m, "ajouter.png");

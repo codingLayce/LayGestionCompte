@@ -47,29 +47,18 @@ public class ControleurFX {
    * Appelée au click dans le menu et la barre d'outils.
    */
   public void nouveauFichier(){
-    if (this.compte != null) {
-      if (this.compte.hasBeenModified()){
-        Optional<ButtonType> result = Dialogs.confirmYesNo("Sauvegarder compte",
-                "Des modifications ont été faites sur votre compte.", "Voulez-vous les sauvegarder ?");
-        if (result.isPresent()){
-          if (result.get() == ButtonType.YES){
-            // TODO: Sauvegarder compte.
-          }
-        } else {
-          Dialogs.error("Sauvegarder compte", "Vous devez sélectionner une réponse.");
-          return;
-        }
-      }
-    }
+    verifSauvegarde();
 
     this.statut.setValue("Création du compte...");
 
+    Compte.create();
     this.compte = Compte.getInstance();
 
     this.fenetre.compteCreated();
     this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
 
     this.disableSauvegarderSous.setValue(false);
+    this.disableSauvegarder.setValue(true);
 
     this.statut.setValue("Création du compte OK");
   }
@@ -79,6 +68,8 @@ public class ControleurFX {
    * Appelée au click dans le menu et la barre d'outils.
    */
   public void ouvrirFichier(){
+    verifSauvegarde();
+
     this.statut.setValue("Ouverture d'un compte...");
 
     FileChooser fc = new FileChooser();
@@ -87,20 +78,21 @@ public class ControleurFX {
     File chosenFile = fc.showOpenDialog(null);
     if (chosenFile != null){
       try {
+        Compte.create();
         this.compte = Compte.getInstance();
         this.compte.ouvrirCompte(chosenFile);
 
         this.fenetre.compteCreated();
         this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
 
+        this.disableSauvegarderSous.setValue(false);
+        this.disableSauvegarder.setValue(true);
+
         this.statut.setValue("Compte ouvert");
       } catch (IOException ex){
         Dialogs.errorMessage("Ouverture de compte", ex);
         this.statut.setValue("Impossible d'ouvrir le compte");
       }
-    } else {
-      Dialogs.warning("Ouverture de compte", "Aucun fichier sélectionné.");
-      this.statut.setValue("Aucun fichier sélectionné");
     }
   }
 
@@ -119,31 +111,45 @@ public class ControleurFX {
    * @param transaction à supprimer.
    */
   public void supprimerTransaction(Transaction transaction){
+    this.statut.setValue("suppression d'une transaction...");
+
     if (this.compte != null){
       try {
         this.compte.retirerTransaction(transaction);
-        Fenetre.getInstance().setData(FXCollections.observableArrayList(this.compte.getTransactions()));
-        // TODO: afficher suppression OK.
+
+        this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+        this.disableSauvegarder.setValue(false);
+        this.statut.setValue("suppression d'une transaction OK");
       } catch (TransactionException e) {
-        e.printStackTrace();
-        // TODO: afficher erreur.
+        Dialogs.errorMessage("Suppression d'une transaction", e);
+        this.statut.setValue("echec de suppression d'une transaction");
       }
     } else {
-      // TODO: afficher compte null.
+      Dialogs.error("Sauvegarder votre compte", "Vous ne pouvez pas supprimer de transaction.", "Aucun compte n'est ouvert.");
+      this.statut.setValue("echec de suppression d'une transaction");
     }
   }
 
+  /**
+   * Sauvegarde le compte même endroit que précédement.
+   * Appelée au clic sur les boutons de sauvegarde.
+   */
   public void sauvegarderCompte(){
     this.statut.setValue("sauvegarde du compte...");
 
     if (this.compte != null){
-      try {
-        this.compte.sauvegarderCompte(new File("test.json"));
+      if (this.compte.getOpenFile() != null) {
+        try {
+          this.compte.sauvegarderCompte(this.compte.getOpenFile());
 
-        this.disableSauvegarder.setValue(true);
-        this.statut.setValue("compte sauvegarder OK");
-      } catch (IOException ex) {
-        Dialogs.errorMessage("Sauvegarder votre compte", ex);
+          this.disableSauvegarder.setValue(true);
+          this.statut.setValue("compte sauvegarder OK");
+        } catch (IOException ex) {
+          Dialogs.errorMessage("Sauvegarder votre compte", ex);
+          this.statut.setValue("echec de la sauvegarde du compte");
+        }
+      } else{
+        sauvegarderSousCompte();
       }
     } else{
       Dialogs.error("Sauvegarder votre compte", "Vous ne pouvez pas sauvegarder votre compte.", "Aucun compte n'est ouvert.");
@@ -191,7 +197,9 @@ public class ControleurFX {
       Optional<Transaction> transaction = new AssistantTransaction("Assistant d'ajout de transaction").showAndWait();
       if (transaction.isPresent()){
         this.compte.ajouterTransaction(transaction.get());
+
         this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+        this.disableSauvegarder.setValue(false);
         this.statut.setValue("ajout d'une transacition OK");
       }
     } else {
@@ -207,6 +215,22 @@ public class ControleurFX {
   public void quitter() {
     // TODO: faire les tests de sauvegarde avant de quitter.
     System.exit(0);
+  }
+
+  private void verifSauvegarde(){
+    if (this.compte != null) {
+      if (this.compte.hasBeenModified()){
+        Optional<ButtonType> result = Dialogs.confirmYesNo("Sauvegarder compte",
+                "Des modifications ont été faites sur votre compte.", "Voulez-vous les sauvegarder ?");
+        if (result.isPresent()){
+          if (result.get() == ButtonType.YES){
+            sauvegarderCompte();
+          }
+        } else {
+          Dialogs.error("Sauvegarder compte", "Vous devez sélectionner une réponse.");
+        }
+      }
+    }
   }
 
   /* GETTERS & SETTERS */
