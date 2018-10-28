@@ -8,7 +8,8 @@ import fr.layce.V2_0.vue.dialog.AssistantTransaction;
 import fr.layce.V2_0.vue.dialog.Dialogs;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.event.Event;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class ControleurFX {
      * Créer un nouveau fichier.
      * Appelée au click dans le menu et la barre d'outils.
      */
-    public void nouveauFichier(Event e){
+    public void nouveauFichier(){
         this.statut.setValue("Création du compte...");
         this.compte = Compte.getInstance();
         this.fenetre.compteCreated();
@@ -50,17 +51,26 @@ public class ControleurFX {
      * Ouvre un nouveau fichier.
      * Appelée au click dans le menu et la barre d'outils.
      */
-    public void ouvrirFichier(Event e){
+    public void ouvrirFichier(){
         this.statut.setValue("Ouverture d'un compte...");
-        try {
-            this.compte = Compte.getInstance();
-            this.compte.ouvrirCompte(new File("caca.json"));
-            this.fenetre.compteCreated();
-            this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
-            this.statut.setValue("Compte ouvert");
-        } catch (IOException ex){
-            Dialogs.errorMessage("Ouverture de compte", ex);
-            this.statut.setValue("Impossible d'ouvrir le compte");
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Sélectionner un fichier");
+        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichiers gestion de compte", "*.gtc"));
+        File f = fc.showOpenDialog(null);
+        if (f != null){
+            try {
+                this.compte = Compte.getInstance();
+                this.compte.ouvrirCompte(f);
+                this.fenetre.compteCreated();
+                this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+                this.statut.setValue("Compte ouvert");
+            } catch (IOException ex){
+                Dialogs.errorMessage("Ouverture de compte", ex);
+                this.statut.setValue("Impossible d'ouvrir le compte");
+            }
+        } else {
+            Dialogs.warning("Ouverture de compte", "Aucun fichier sélectionné.");
+            this.statut.setValue("Aucun fichier sélectionné");
         }
     }
 
@@ -83,7 +93,7 @@ public class ControleurFX {
         }
     }
 
-    public void sauvegarderCompte(Event e){
+    public void sauvegarderCompte(){
         if (this.compte != null){
             try {
                 this.compte.sauvegarderCompte(new File("test.json"));
@@ -100,7 +110,7 @@ public class ControleurFX {
      * Ouvre l'assistant d'ajout de transaction et ajoute la transaction au compte.
      * Appelée au click dans le menu et la barre d'outils.
      */
-    public void ajouterTransaction(Event e){
+    public void ajouterTransaction(){
         if (this.compte != null){
             Optional<Transaction> transaction = new AssistantTransaction("Assistant transaction - Ajouter").showAndWait();
             if (transaction.isPresent()){
@@ -118,7 +128,7 @@ public class ControleurFX {
      * Quitte l'application.
      * Appelée au click dans le menu ou au click de la croix rouge.
      */
-    public void quitter(Event e) {
+    public void quitter() {
         // TODO: faire les tests de sauvegarde avant de quitter.
         System.exit(0);
     }

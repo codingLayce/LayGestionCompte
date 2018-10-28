@@ -16,13 +16,13 @@ class OutilBar extends ToolBar {
 
     OutilBar(){
         super();
-        ajouterItem("btnNouveau", "Créer un nouveau compte").setOnAction(e -> this.ctrl.nouveauFichier(e));
-        ajouterItem("btnOuvrir", "Ouvre un compte existant").setOnAction(e -> this.ctrl.ouvrirFichier(e));
+        ajouterItem("btnNouveau", "Créer un nouveau compte").setOnAction(e -> this.ctrl.nouveauFichier());
+        ajouterItem("btnOuvrir", "Ouvre un compte existant").setOnAction(e -> this.ctrl.ouvrirFichier());
         ajouterSeparateur();
-        ajouterItem("btnSauvegarder", "Sauvegarde le compte courant").setOnAction(e -> this.ctrl.sauvegarderCompte(e));
+        ajouterItem("btnSauvegarder", "Sauvegarde le compte courant").setOnAction(e -> this.ctrl.sauvegarderCompte());
         ajouterItem("btnSauvegarderSous", "Sauvegarde le compte courant à l'emplacement voulu");
         ajouterSeparateur();
-        ajouterItem("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction").setOnAction(e -> this.ctrl.ajouterTransaction(e));
+        ajouterItem("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction").setOnAction(e -> this.ctrl.ajouterTransaction());
     }
 
     private Button ajouterItem(String i, String t) {

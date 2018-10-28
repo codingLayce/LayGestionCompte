@@ -21,23 +21,23 @@ class MenuBar extends javafx.scene.control.MenuBar {
 
         Menu m = ajouteMenu("Fichier");
         MenuItem mi = ajouteItem("Nouveau", m, "nouveau.png");
-        mi.setOnAction(e -> this.ctrl.nouveauFichier(e));
+        mi.setOnAction(e -> this.ctrl.nouveauFichier());
         mi.setAccelerator(KeyCombination.valueOf("ctrl + N"));
         mi = ajouteItem("Ouvrir", m, "ouvrir.png");
-        mi.setOnAction(e -> this.ctrl.ouvrirFichier(e));
+        mi.setOnAction(e -> this.ctrl.ouvrirFichier());
         mi.setAccelerator(KeyCombination.valueOf("ctrl + O"));
         ajouteSeparateur(m);
         mi = ajouteItem("Enregistrer", m, "sauvegarder.png");
-        mi.setOnAction(e -> this.ctrl.sauvegarderCompte(e));
+        mi.setOnAction(e -> this.ctrl.sauvegarderCompte());
         mi = ajouteItem("Enregistrer-sous", m, "sauvegarderSous.png");
         ajouteSeparateur(m);
         mi = ajouteItem("Quitter", m);
-        mi.setOnAction(e -> this.ctrl.quitter(e));
+        mi.setOnAction(e -> this.ctrl.quitter());
         mi.setAccelerator(KeyCombination.valueOf("ctrl + Q"));
 
         m = ajouteMenu("Edition");
         mi = ajouteItem("Ajouter transaction", m, "ajouter.png");
-        mi.setOnAction(e -> this.ctrl.ajouterTransaction(e));
+        mi.setOnAction(e -> this.ctrl.ajouterTransaction());
         mi.setAccelerator(KeyCombination.valueOf("ctrl + shift + A"));
     }
 

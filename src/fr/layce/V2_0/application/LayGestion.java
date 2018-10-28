@@ -22,6 +22,6 @@ public class LayGestion extends Application{
         stage.setTitle("LayGestionCompte");
         stage.getIcons().addAll(new Image(getClass().getClassLoader().getResourceAsStream("fr/layce/V2_0/vue/icon/logo.png")));
         stage.show();
-        stage.setOnCloseRequest(ctrl::quitter);
+        stage.setOnCloseRequest(e -> ctrl.quitter());
     }
 }
