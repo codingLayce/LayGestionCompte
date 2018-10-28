@@ -82,6 +82,15 @@ public class Compte {
         this.openFile = f;
     }
 
+    public void modifierTransaction(Transaction ancienne, Transaction nouvelle) throws TransactionException{
+      if (this.transactions.contains(ancienne)){
+        this.transactions.remove(ancienne);
+        this.transactions.add(nouvelle);
+      } else {
+        throw new TransactionException("La transaction selectionne ne fait pas partie du compte");
+      }
+    }
+
     public static void create(){
       instance = new Compte();
     }

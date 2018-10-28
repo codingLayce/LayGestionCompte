@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 /**
  * Représente une transaction effectuée par l'utilisateur.
  * Une transaction est caractérisée par un type {@link fr.layce.V2_0.modele.Transaction.Type}, une date et un montant.
- *
  * @author Layce17
  */
 public class Transaction implements Comparable<Transaction> {
@@ -64,14 +63,14 @@ public class Transaction implements Comparable<Transaction> {
     return montant.get();
   }
 
-  public String getRetrait() {
+  public String getDebit() {
     if (this.montant.get() < 0.0)
       return String.valueOf(this.montant.get());
     else
       return null;
   }
 
-  public String getDepot() {
+  public String getCredit() {
     if (this.montant.get() < 0.0)
       return null;
     else

@@ -21,11 +21,11 @@ class InformationsPane extends TableView<Transaction> {
         tc = ajouteColonne("Type");
         tc.setCellValueFactory(new PropertyValueFactory<>("type"));
         this.getColumns().add(tc);
-        tc = ajouteColonne("Retrait");
-        tc.setCellValueFactory(new PropertyValueFactory<>("retrait"));
+        tc = ajouteColonne("Débit");
+        tc.setCellValueFactory(new PropertyValueFactory<>("debit"));
         this.getColumns().add(tc);
-        tc = ajouteColonne("Depôt");
-        tc.setCellValueFactory(new PropertyValueFactory<>("depot"));
+        tc = ajouteColonne("Crédit");
+        tc.setCellValueFactory(new PropertyValueFactory<>("credit"));
         this.getColumns().add(tc);
         tc = ajouteColonne("Solde");
         tc.setCellValueFactory(new PropertyValueFactory<>("solde"));

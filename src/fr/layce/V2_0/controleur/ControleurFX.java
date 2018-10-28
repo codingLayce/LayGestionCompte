@@ -55,7 +55,7 @@ public class ControleurFX {
     this.compte = Compte.getInstance();
 
     this.fenetre.compteCreated();
-    this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+    this.fenetre.setData(this.compte.getTransactions());
 
     this.disableSauvegarderSous.setValue(false);
     this.disableSauvegarder.setValue(true);
@@ -83,7 +83,7 @@ public class ControleurFX {
         this.compte.ouvrirCompte(chosenFile);
 
         this.fenetre.compteCreated();
-        this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+        this.fenetre.setData(this.compte.getTransactions());
 
         this.disableSauvegarderSous.setValue(false);
         this.disableSauvegarder.setValue(true);
@@ -102,7 +102,27 @@ public class ControleurFX {
    * @param transaction à modifier.
    */
   public void modifierTransaction(Transaction transaction){
-    // TODO: modifier.
+    this.statut.setValue("modification d'une transaction...");
+
+    if (this.compte != null){
+      AssistantTransaction dialog = new AssistantTransaction("Assistant de modification de transaction", transaction);
+      Optional<Transaction> result = dialog.showAndWait();
+      if (result.isPresent()){
+        try {
+          this.compte.modifierTransaction(transaction, result.get());
+
+          this.fenetre.setData(this.compte.getTransactions());
+          this.disableSauvegarder.setValue(false);
+          this.statut.setValue("modification d'une transaction OK");
+        } catch (TransactionException e) {
+          Dialogs.errorMessage("Modification d'une transaction", e);
+          this.statut.setValue("echec de modification d'une transaction");
+        }
+      }
+    } else {
+      Dialogs.error("Modification d'une transaction", "Vous ne pouvez pas modifier cette transaction.", "Aucun compte n'est ouvert.");
+      this.statut.setValue("echec de modification d'une transaction");
+    }
   }
 
   /**
@@ -117,7 +137,7 @@ public class ControleurFX {
       try {
         this.compte.retirerTransaction(transaction);
 
-        this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+        this.fenetre.setData(this.compte.getTransactions());
         this.disableSauvegarder.setValue(false);
         this.statut.setValue("suppression d'une transaction OK");
       } catch (TransactionException e) {
@@ -198,7 +218,7 @@ public class ControleurFX {
       if (transaction.isPresent()){
         this.compte.ajouterTransaction(transaction.get());
 
-        this.fenetre.setData(FXCollections.observableArrayList(this.compte.getTransactions()));
+        this.fenetre.setData(this.compte.getTransactions());
         this.disableSauvegarder.setValue(false);
         this.statut.setValue("ajout d'une transacition OK");
       }
@@ -213,7 +233,7 @@ public class ControleurFX {
    * Appelée au click dans le menu ou au click de la croix rouge.
    */
   public void quitter() {
-    // TODO: faire les tests de sauvegarde avant de quitter.
+    verifSauvegarde();
     System.exit(0);
   }
 

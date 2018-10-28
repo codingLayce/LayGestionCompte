@@ -2,14 +2,14 @@ package fr.layce.V2_0.vue;
 
 import fr.layce.V2_0.controleur.ControleurFX;
 import fr.layce.V2_0.modele.Transaction;
-import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+
+import java.util.List;
 
 /**
  * Représente une fenêtre.
@@ -98,8 +98,8 @@ public class Fenetre extends BorderPane {
    *
    * @param transactions mises à jour.
    */
-  public void setData(ObservableList<Transaction> transactions) {
-    this.informations_pane.setData(transactions);
+  public void setData(List<Transaction> transactions) {
+    this.informations_pane.setData(FXCollections.observableArrayList(transactions));
   }
 
   public MenuBar getMenuBar() {
