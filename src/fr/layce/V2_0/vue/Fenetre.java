@@ -14,89 +14,99 @@ import javafx.scene.layout.VBox;
 /**
  * Représente une fenêtre.
  * Elle va contenir tous les éléments graphique de la vue.
+ *
  * @author Layce17
  */
 public class Fenetre extends BorderPane {
-    private static Fenetre instance;
+  private static Fenetre instance;
 
-    private MenuBar menu_bar;
-    private OutilBar outil_bar;
-    private StatutBar statut_bar;
-    private InformationsPane informations_pane;
+  private MenuBar menu_bar;
+  private OutilBar outil_bar;
+  private StatutBar statut_bar;
+  private InformationsPane informations_pane;
 
-    private Fenetre(){
-        super();
+  private Fenetre() {
+    super();
 
-        initTop();
-        initStatut();
-        this.setCenter(new Label("Pas de compte ouvert."));
-        initInformationsPane();
-    }
+    initTop();
+    initStatut();
+    this.setCenter(new Label("Pas de compte ouvert."));
+    initInformationsPane();
+  }
 
-    private void initTop(){
-        this.menu_bar = new MenuBar();
-        this.outil_bar = new OutilBar();
-        VBox vb = new VBox();
-        vb.getChildren().addAll(this.menu_bar, this.outil_bar);
-        this.setTop(vb);
-    }
+  private void initTop() {
+    this.menu_bar = new MenuBar();
+    this.outil_bar = new OutilBar();
+    VBox vb = new VBox();
+    vb.getChildren().addAll(this.menu_bar, this.outil_bar);
+    this.setTop(vb);
+  }
 
-    private void initStatut(){
-        this.statut_bar = new StatutBar();
-        this.setBottom(this.statut_bar);
+  private void initStatut() {
+    this.statut_bar = new StatutBar();
+    this.setBottom(this.statut_bar);
 
-    }
+  }
 
-    private void initInformationsPane(){
-        this.informations_pane = new InformationsPane();
-    }
+  private void initInformationsPane() {
+    this.informations_pane = new InformationsPane();
+  }
 
-    public void compteCreated(){
-        this.setCenter(this.informations_pane);
-    }
+  public void compteCreated() {
+    this.setCenter(this.informations_pane);
+  }
 
-    /* GETTERS & SETTERS */
+  /* GETTERS & SETTERS */
 
-    /**
-     * Implémentation du patron singleton.
-     * @return l'instance unique de la fenetre.
-     */
-    public static Fenetre getInstance(){
-        if (instance == null)
-            instance = new Fenetre();
-        return instance;
-    }
+  /**
+   * Implémentation du patron singleton.
+   *
+   * @return l'instance unique de la fenetre.
+   */
+  public static Fenetre getInstance() {
+    if (instance == null)
+      instance = new Fenetre();
+    return instance;
+  }
 
-    /**
-     * Défini les propriétés observable par la fenetre.
-     * @param statut propriété de la barre d'état.
-     * @param sauvegarder propriété des boutons sauvegarder.
-     * @param sauvegarderSous propriété des boutons sauvegarder-sous.
-     */
-    public void setProperties(SimpleStringProperty statut, SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
-        this.statut_bar.setStatutProperty(statut);
-        this.menu_bar.setProperties(sauvegarder, sauvegarderSous);
-        this.outil_bar.setProperties(sauvegarder, sauvegarderSous);
-    }
+  /**
+   * Défini les propriétés observable par la fenetre.
+   *
+   * @param statut          propriété de la barre d'état.
+   * @param sauvegarder     propriété des boutons sauvegarder.
+   * @param sauvegarderSous propriété des boutons sauvegarder-sous.
+   */
+  public void setProperties(SimpleStringProperty statut, SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
+    this.statut_bar.setStatutProperty(statut);
+    this.menu_bar.setProperties(sauvegarder, sauvegarderSous);
+    this.outil_bar.setProperties(sauvegarder, sauvegarderSous);
+  }
 
-    /**
-     * Défini le controleur sur tous les parties de la vue nécessitants une redirection d'un event vers le controleur.
-     * @param ctrl controleur qui fait la logique du programme.
-     */
-    public void setControleur(ControleurFX ctrl){
-        this.menu_bar.setControleur(ctrl);
-        this.outil_bar.setControleur(ctrl);
-        this.informations_pane.setControleur(ctrl);
-    }
+  /**
+   * Défini le controleur sur tous les parties de la vue nécessitants une redirection d'un event vers le controleur.
+   *
+   * @param ctrl controleur qui fait la logique du programme.
+   */
+  public void setControleur(ControleurFX ctrl) {
+    this.menu_bar.setControleur(ctrl);
+    this.outil_bar.setControleur(ctrl);
+    this.informations_pane.setControleur(ctrl);
+  }
 
-    /**
-     * Update le tableau des transactions.
-     * @param transactions mises à jour.
-     */
-    public void setData(ObservableList<Transaction> transactions){
-        this.informations_pane.setData(transactions);
-    }
+  /**
+   * Update le tableau des transactions.
+   *
+   * @param transactions mises à jour.
+   */
+  public void setData(ObservableList<Transaction> transactions) {
+    this.informations_pane.setData(transactions);
+  }
 
-    public MenuBar getMenuBar(){ return this.menu_bar; }
-    public OutilBar getOutilBar() { return this.outil_bar; }
+  public MenuBar getMenuBar() {
+    return this.menu_bar;
+  }
+
+  public OutilBar getOutilBar() {
+    return this.outil_bar;
+  }
 }

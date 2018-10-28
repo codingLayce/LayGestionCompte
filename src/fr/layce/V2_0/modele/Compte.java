@@ -114,4 +114,8 @@ public class Compte {
         }
         return String.valueOf(solde);
     }
+
+    public File getOpenFile(){
+      return this.openFile;
+    }
 }
