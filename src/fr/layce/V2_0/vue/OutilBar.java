@@ -2,10 +2,13 @@ package fr.layce.V2_0.vue;
 
 import fr.layce.V2_0.controleur.ControleurFX;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.scene.control.Button;
-import javafx.scene.control.Separator;
-import javafx.scene.control.ToolBar;
-import javafx.scene.control.Tooltip;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 /**
  * Représente une bar d'outil.
@@ -19,6 +22,8 @@ public class OutilBar extends ToolBar {
   private Button sauvegarder;
   private Button sauvegarderSous;
   private Button ajouterTransaction;
+
+  private Label lbl_solde;
 
   OutilBar() {
     super();
@@ -35,6 +40,13 @@ public class OutilBar extends ToolBar {
     this.ajouterTransaction = ajouterItem("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction");
     this.ajouterTransaction.setOnAction(e -> this.ctrl.ajouterTransaction());
     this.ajouterTransaction.setDisable(true);
+
+    Pane fill_empty_space = new Pane();
+    HBox.setHgrow(fill_empty_space, Priority.ALWAYS);
+    lbl_solde = new Label("Solde: 0 €");
+    lbl_solde.setStyle("-fx-font-weight: bold");
+    lbl_solde.setTextFill(Color.rgb(212, 7, 78));
+    this.getItems().addAll(fill_empty_space, lbl_solde);
   }
 
   private Button ajouterItem(String i, String t) {
@@ -59,6 +71,10 @@ public class OutilBar extends ToolBar {
   void setProperties(SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
     this.sauvegarder.disableProperty().bind(sauvegarder);
     this.sauvegarderSous.disableProperty().bind(sauvegarderSous);
+  }
+
+  void setSoldeProperty(SimpleStringProperty solde){
+    this.lbl_solde.textProperty().bind(solde);
   }
 
   public void setSauvegarderDisable(boolean b) {

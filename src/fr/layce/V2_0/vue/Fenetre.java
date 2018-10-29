@@ -82,6 +82,10 @@ public class Fenetre extends BorderPane {
     this.outil_bar.setProperties(sauvegarder, sauvegarderSous);
   }
 
+  public void setSoldeProperty(SimpleStringProperty solde){
+    this.outil_bar.setSoldeProperty(solde);
+  }
+
   /**
    * Défini le controleur sur tous les parties de la vue nécessitants une redirection d'un event vers le controleur.
    *

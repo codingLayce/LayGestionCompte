@@ -58,6 +58,7 @@ public class ControleurFX {
     this.fenetre.setData(this.compte.getTransactions());
     this.fenetre.getMenuBar().setEditionDisable(false);
     this.fenetre.getOutilBar().setEditionDisable(false);
+    this.fenetre.setSoldeProperty(this.compte.getSoldeActuel());
 
     this.disableSauvegarderSous.setValue(false);
     this.disableSauvegarder.setValue(true);
@@ -88,6 +89,7 @@ public class ControleurFX {
         this.fenetre.setData(this.compte.getTransactions());
         this.fenetre.getMenuBar().setEditionDisable(false);
         this.fenetre.getOutilBar().setEditionDisable(false);
+        this.fenetre.setSoldeProperty(this.compte.getSoldeActuel());
 
         this.disableSauvegarderSous.setValue(false);
         this.disableSauvegarder.setValue(true);
