@@ -47,7 +47,7 @@ class InformationsPane extends TableView<Transaction> {
               setStyle("-fx-background-color: rgb(0,200,0); -fx-font-weight: bold;");
               setTextFill(Color.WHITE);
           } else {
-              setStyle("-fx-background-color: rgb(0,200,0); -fx-font-weight: bold;");
+              setStyle("-fx-background-color: rgb(200,0,0); -fx-font-weight: bold;");
               setTextFill(Color.WHITE);
           }
           setText(col.getTableView().getItems().get(current_index).getSolde());
