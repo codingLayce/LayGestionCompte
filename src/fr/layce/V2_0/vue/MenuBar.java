@@ -118,20 +118,13 @@ public class MenuBar extends javafx.scene.control.MenuBar {
   }
 
   /* GETTERS & SETTERS */
-  void setControleur(ControleurFX ctrl) {
-    this.ctrl = ctrl;
-  }
-
   void setProperties(SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
     this.sauvegarder.disableProperty().bind(sauvegarder);
     this.sauvegarderSous.disableProperty().bind(sauvegarderSous);
   }
 
-  public void setSauvegarderDisable(boolean b) {
-    this.sauvegarder.setDisable(b);
-  }
   public void setEditionDisable(boolean b) { this.edition.setDisable(b); }
-  public void setSauvegarderSousDisable(boolean b) {
-    this.sauvegarderSous.setDisable(b);
+  void setControleur(ControleurFX ctrl) {
+    this.ctrl = ctrl;
   }
 }

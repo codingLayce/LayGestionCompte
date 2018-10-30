@@ -3,6 +3,8 @@ package fr.layce.V2_0.modele;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -47,25 +49,9 @@ public class Transaction implements Comparable<Transaction> {
   }
 
   /* GETTERS & SETTERS */
-  public String getDate() {
-    return this.date.format(DateTimeFormatter.ISO_DATE);
-  }
-
-  public LocalDateTime getDateTime() {
-    return date;
-  }
-
-  public void setDate(LocalDateTime date) {
-    this.date = date;
-  }
-
-  public double getMontant() {
-    return montant.get();
-  }
-
   public String getDebit() {
     if (this.montant.get() < 0.0)
-      return String.valueOf(this.montant.get()).replace(".", ",") + " €";
+      return String.format("%,.2f €", Utils.arrondi(montant.get()));
     else
       return null;
   }
@@ -74,34 +60,37 @@ public class Transaction implements Comparable<Transaction> {
     if (this.montant.get() < 0.0)
       return null;
     else
-      return String.valueOf(this.montant.get()).replace(".", ",") + " €";
+      return String.format("%,.2f €", Utils.arrondi(montant.get()));
   }
 
   public String getSolde() {
-    return Compte.getInstance().getSolde(this).replace(".", ",") + " €";
+    double solde = Compte.getInstance().getSolde(this);
+    return String.format("%,.2f €", solde);
   }
 
+  public double getSoldeValue(){ return Compte.getInstance().getSolde(this); }
   public SimpleDoubleProperty montantProperty() {
     return montant;
   }
-
-  public void setMontant(double montant) {
-    this.montant.set(montant);
-  }
-
+  public void setMontant(double montant) { this.montant.set(montant); }
   public Type getType() {
     return type;
   }
-
   public void setType(Type type) {
     this.type = type;
   }
-
   public String getLibelle() {
     return this.libelle.get();
   }
-
-  public void setLibelle(String libelle) {
-    this.libelle.set(libelle);
+  public void setLibelle(String libelle) { this.libelle.set(libelle); }
+  public String getDate() {
+    return this.date.format(DateTimeFormatter.ISO_DATE);
   }
+  public LocalDateTime getDateTime() {
+    return date;
+  }
+  public void setDate(LocalDateTime date) {
+    this.date = date;
+  }
+  public double getMontant() { return Utils.arrondi(montant.get()); }
 }

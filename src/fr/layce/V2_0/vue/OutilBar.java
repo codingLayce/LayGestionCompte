@@ -64,9 +64,6 @@ public class OutilBar extends ToolBar {
   }
 
   /* GETTERS & SETTERS */
-  void setControleur(ControleurFX ctrl) {
-    this.ctrl = ctrl;
-  }
 
   void setProperties(SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
     this.sauvegarder.disableProperty().bind(sauvegarder);
@@ -76,14 +73,8 @@ public class OutilBar extends ToolBar {
   void setSoldeProperty(SimpleStringProperty solde){
     this.lbl_solde.textProperty().bind(solde);
   }
-
-  public void setSauvegarderDisable(boolean b) {
-    this.sauvegarder.setDisable(b);
-  }
-
-  public void setSauvegarderSousDisable(boolean b) {
-    this.sauvegarderSous.setDisable(b);
-  }
-
   public void setEditionDisable(boolean b) { this.ajouterTransaction.setDisable(b); }
+  void setControleur(ControleurFX ctrl) {
+    this.ctrl = ctrl;
+  }
 }

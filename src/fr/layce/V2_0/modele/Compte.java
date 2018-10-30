@@ -109,10 +109,6 @@ public class Compte {
   }
 
   /* GETTERS & SETTERS */
-  public LinkedList<Transaction> getTransactions() {
-    return this.transactions;
-  }
-
   public boolean hasBeenModified() {
     return this.modified;
   }
@@ -134,7 +130,7 @@ public class Compte {
    * @param transaction pour laquel il faut calculer le solde.
    * @return le solde au moment de la transaction (après celle-ci).
    */
-  String getSolde(Transaction transaction) {
+  double getSolde(Transaction transaction) {
     double solde = 0;
     this.transactions.sort(Comparator.naturalOrder());
 
@@ -143,12 +139,12 @@ public class Compte {
       solde += this.transactions.get(i).getMontant();
       i++;
     }
-    return String.valueOf(solde);
+
+    return Utils.arrondi(solde);
   }
 
   /**
    * Calcul le solde actuel du compte.
-   * @return le solde actuel.
    */
   private void updateSoldeActuel(){
     double solde = 0;
@@ -157,13 +153,15 @@ public class Compte {
      for (Transaction t : this.transactions){
        solde += t.getMontant();
      }
-     this.soldeActuel.set(String.valueOf(solde) + " €");
+     this.soldeActuel.set("Solde: " + String.format("%,.2f €", Utils.arrondi(solde)));
   }
 
   public SimpleStringProperty getSoldeActuel(){
     return this.soldeActuel;
   }
-
+  public LinkedList<Transaction> getTransactions() {
+    return this.transactions;
+  }
   public File getOpenFile() {
     return this.openFile;
   }
