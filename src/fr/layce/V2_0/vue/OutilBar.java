@@ -22,6 +22,7 @@ public class OutilBar extends ToolBar {
   private Button sauvegarder;
   private Button sauvegarderSous;
   private Button ajouterTransaction;
+  private Button supprimerTransaction;
 
   private Label lbl_solde;
 
@@ -40,6 +41,9 @@ public class OutilBar extends ToolBar {
     this.ajouterTransaction = ajouterItem("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction");
     this.ajouterTransaction.setOnAction(e -> this.ctrl.ajouterTransaction());
     this.ajouterTransaction.setDisable(true);
+    this.supprimerTransaction = ajouterItem("btnSupprimerTransaction", "Supprime la transaction sélectionné");
+    this.supprimerTransaction.setOnAction(e -> this.ctrl.supprimerTransaction(Fenetre.getInstance().getSelectedTransaction()));
+    this.supprimerTransaction.setDisable(true);
 
     Pane fill_empty_space = new Pane();
     HBox.setHgrow(fill_empty_space, Priority.ALWAYS);
@@ -73,7 +77,7 @@ public class OutilBar extends ToolBar {
   void setSoldeProperty(SimpleStringProperty solde){
     this.lbl_solde.textProperty().bind(solde);
   }
-  public void setEditionDisable(boolean b) { this.ajouterTransaction.setDisable(b); }
+  public void setEditionDisable(boolean b) { this.ajouterTransaction.setDisable(b); this.supprimerTransaction.setDisable(b); }
   void setControleur(ControleurFX ctrl) {
     this.ctrl = ctrl;
   }

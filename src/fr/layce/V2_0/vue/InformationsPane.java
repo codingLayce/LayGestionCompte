@@ -68,7 +68,7 @@ class InformationsPane extends TableView<Transaction> {
     });
   }
 
-  public void setData(ObservableList<Transaction> transferts) {
+  void setData(ObservableList<Transaction> transferts) {
     this.setItems(transferts);
   }
 
@@ -79,7 +79,10 @@ class InformationsPane extends TableView<Transaction> {
   }
 
   /* GETTERS & SETTERS */
-  public void setControleur(ControleurFX ctrl) {
+  void setControleur(ControleurFX ctrl) {
     this.ctrl = ctrl;
+  }
+  Transaction getSelectedTransaction(){
+    return this.getSelectionModel().getSelectedItem();
   }
 }

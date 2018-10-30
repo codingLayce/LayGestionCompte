@@ -109,8 +109,11 @@ public class Fenetre extends BorderPane {
   public MenuBar getMenuBar() {
     return this.menu_bar;
   }
-
   public OutilBar getOutilBar() {
     return this.outil_bar;
+  }
+
+  Transaction getSelectedTransaction(){
+    return this.informations_pane.getSelectedTransaction();
   }
 }

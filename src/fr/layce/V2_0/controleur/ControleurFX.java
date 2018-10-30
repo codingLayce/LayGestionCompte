@@ -8,7 +8,6 @@ import fr.layce.V2_0.vue.dialog.AssistantTransaction;
 import fr.layce.V2_0.vue.dialog.Dialogs;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 

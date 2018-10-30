@@ -51,6 +51,9 @@ public class MenuBar extends javafx.scene.control.MenuBar {
     mi = ajouteItem("Ajouter transaction", this.edition, "ajouter.png");
     mi.setOnAction(e -> this.ctrl.ajouterTransaction());
     mi.setAccelerator(KeyCombination.valueOf("ctrl + shift + A"));
+    mi = ajouteItem("Supprimer transaction", this.edition, "supprimer.png");
+    mi.setOnAction(e -> this.ctrl.supprimerTransaction(Fenetre.getInstance().getSelectedTransaction()));
+    mi.setAccelerator(KeyCombination.valueOf("ctrl + shift + D"));
     this.edition.setDisable(true);
   }
 

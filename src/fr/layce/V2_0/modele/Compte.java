@@ -48,12 +48,16 @@ public class Compte {
    * @param transaction à retirer.
    */
   public void retirerTransaction(Transaction transaction) throws TransactionException {
-    if (this.transactions.contains(transaction)) {
-      this.transactions.remove(transaction);
-      this.modified = true;
-      updateSoldeActuel();
+    if (transaction != null) {
+      if (this.transactions.contains(transaction)) {
+        this.transactions.remove(transaction);
+        this.modified = true;
+        updateSoldeActuel();
+      } else {
+        throw new TransactionException("La transaction selectionne ne fait pas partie du compte");
+      }
     } else {
-      throw new TransactionException("La transaction selectionne ne fait pas partie du compte");
+      throw new TransactionException("Aucune transaction n'est sélectionnée");
     }
   }
 
