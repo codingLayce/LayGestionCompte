@@ -3,6 +3,7 @@ package fr.layce.V2_0.vue;
 import fr.layce.V2_0.controleur.ControleurFX;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -24,26 +25,43 @@ public class OutilBar extends ToolBar {
   private Button ajouterTransaction;
   private Button supprimerTransaction;
 
+  private ChoiceBox<String> cb_annee;
+  private ChoiceBox<String> cb_mois;
+
   private Label lbl_solde;
 
   OutilBar() {
     super();
-    ajouterItem("btnNouveau", "Créer un nouveau compte").setOnAction(e -> this.ctrl.nouveauFichier());
-    ajouterItem("btnOuvrir", "Ouvre un compte existant").setOnAction(e -> this.ctrl.ouvrirFichier());
+    ajouterBouton("btnNouveau", "Créer un nouveau compte").setOnAction(e -> this.ctrl.nouveauFichier());
+    ajouterBouton("btnOuvrir", "Ouvre un compte existant").setOnAction(e -> this.ctrl.ouvrirFichier());
+
     ajouterSeparateur();
-    this.sauvegarder = ajouterItem("btnSauvegarder", "Sauvegarde le compte courant");
+    this.sauvegarder = ajouterBouton("btnSauvegarder", "Sauvegarde le compte courant");
     this.sauvegarder.setOnAction(e -> this.ctrl.sauvegarderCompte());
     this.sauvegarder.setDisable(true);
-    this.sauvegarderSous = ajouterItem("btnSauvegarderSous", "Sauvegarde le compte courant à l'emplacement voulu");
+    this.sauvegarderSous = ajouterBouton("btnSauvegarderSous", "Sauvegarde le compte courant à l'emplacement voulu");
     this.sauvegarderSous.setOnAction(e -> this.ctrl.sauvegarderSousCompte());
     this.sauvegarderSous.setDisable(true);
+
     ajouterSeparateur();
-    this.ajouterTransaction = ajouterItem("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction");
+    this.ajouterTransaction = ajouterBouton("btnAjouterTransaction", "Ouvre l'assistant d'ajout de transaction");
     this.ajouterTransaction.setOnAction(e -> this.ctrl.ajouterTransaction());
     this.ajouterTransaction.setDisable(true);
-    this.supprimerTransaction = ajouterItem("btnSupprimerTransaction", "Supprime la transaction sélectionné");
+    this.supprimerTransaction = ajouterBouton("btnSupprimerTransaction", "Supprime la transaction sélectionné");
     this.supprimerTransaction.setOnAction(e -> this.ctrl.supprimerTransaction(Fenetre.getInstance().getSelectedTransaction()));
     this.supprimerTransaction.setDisable(true);
+
+    ajouterSeparateur();
+    this.cb_annee = ajouteChoice("Année: ");
+    this.cb_annee.getItems().add("Toutes");
+    this.cb_annee.getSelectionModel().selectFirst();
+    this.cb_annee.setDisable(true);
+    this.cb_mois = ajouteChoice("Mois: ");
+    this.cb_mois.getItems().add("Tous");
+    this.cb_mois.getSelectionModel().selectFirst();
+    this.cb_mois.setDisable(true);
+    this.cb_annee.setOnAction(e -> this.ctrl.updateDates(this.cb_annee.getSelectionModel().getSelectedItem(), this.cb_mois.getSelectionModel().getSelectedItem()));
+    this.cb_mois.setOnAction(e -> this.ctrl.updateDates(this.cb_annee.getSelectionModel().getSelectedItem(), this.cb_mois.getSelectionModel().getSelectedItem()));
 
     Pane fill_empty_space = new Pane();
     HBox.setHgrow(fill_empty_space, Priority.ALWAYS);
@@ -53,7 +71,7 @@ public class OutilBar extends ToolBar {
     this.getItems().addAll(fill_empty_space, lbl_solde);
   }
 
-  private Button ajouterItem(String i, String t) {
+  private Button ajouterBouton(String i, String t) {
     Button b = new Button();
     b.getStyleClass().add("btn");
     b.setId(i);
@@ -63,21 +81,43 @@ public class OutilBar extends ToolBar {
     return b;
   }
 
+  private ChoiceBox<String> ajouteChoice(String label){
+    Label lbl = new Label(label);
+    ChoiceBox<String> cb = new ChoiceBox<>();
+    HBox hb = new HBox();
+    hb.getChildren().addAll(lbl, cb);
+    this.getItems().add(hb);
+    return cb;
+  }
+
   private void ajouterSeparateur() {
     this.getItems().add(new Separator());
   }
 
   /* GETTERS & SETTERS */
-
   void setProperties(SimpleBooleanProperty sauvegarder, SimpleBooleanProperty sauvegarderSous) {
     this.sauvegarder.disableProperty().bind(sauvegarder);
     this.sauvegarderSous.disableProperty().bind(sauvegarderSous);
+  }
+  public void setEditionDisable(boolean b) {
+    this.ajouterTransaction.setDisable(b);
+    this.supprimerTransaction.setDisable(b);
+    this.cb_annee.setDisable(b);
+    this.cb_mois.setDisable(b);
+  }
+
+  public void setDateItems(ObservableList<String> annees, ObservableList<String> mois){
+    annees.add(0, "Toutes");
+    mois.add(0, "Tous");
+    this.cb_annee.setItems(annees);
+    this.cb_mois.setItems(mois);
+    this.cb_annee.getSelectionModel().selectFirst();
+    this.cb_mois.getSelectionModel().selectFirst();
   }
 
   void setSoldeProperty(SimpleStringProperty solde){
     this.lbl_solde.textProperty().bind(solde);
   }
-  public void setEditionDisable(boolean b) { this.ajouterTransaction.setDisable(b); this.supprimerTransaction.setDisable(b); }
   void setControleur(ControleurFX ctrl) {
     this.ctrl = ctrl;
   }

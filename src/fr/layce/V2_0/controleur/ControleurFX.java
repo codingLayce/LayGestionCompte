@@ -2,6 +2,7 @@ package fr.layce.V2_0.controleur;
 
 import fr.layce.V2_0.modele.Compte;
 import fr.layce.V2_0.modele.Transaction;
+import fr.layce.V2_0.modele.Utils;
 import fr.layce.V2_0.modele.exceptions.TransactionException;
 import fr.layce.V2_0.vue.Fenetre;
 import fr.layce.V2_0.vue.dialog.AssistantTransaction;
@@ -13,6 +14,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Month;
 import java.util.Optional;
 
 /**
@@ -88,6 +90,7 @@ public class ControleurFX {
         this.fenetre.setData(this.compte.getTransactions());
         this.fenetre.getMenuBar().setEditionDisable(false);
         this.fenetre.getOutilBar().setEditionDisable(false);
+        this.fenetre.getOutilBar().setDateItems(this.compte.getAnneesExistantes(), this.compte.getMoisExistants());
         this.fenetre.setSoldeProperty(this.compte.getSoldeActuel());
 
         this.disableSauvegarderSous.setValue(false);
@@ -119,6 +122,7 @@ public class ControleurFX {
           this.compte.modifierTransaction(transaction, result.get());
 
           this.fenetre.setData(this.compte.getTransactions());
+          this.fenetre.getOutilBar().setDateItems(this.compte.getAnneesExistantes(), this.compte.getMoisExistants());
           this.disableSauvegarder.setValue(false);
           this.statut.setValue("modification d'une transaction OK");
         } catch (TransactionException e) {
@@ -147,6 +151,7 @@ public class ControleurFX {
         this.compte.retirerTransaction(transaction);
 
         this.fenetre.setData(this.compte.getTransactions());
+        this.fenetre.getOutilBar().setDateItems(this.compte.getAnneesExistantes(), this.compte.getMoisExistants());
         this.disableSauvegarder.setValue(false);
         this.statut.setValue("suppression d'une transaction OK");
       } catch (TransactionException e) {
@@ -228,14 +233,38 @@ public class ControleurFX {
         this.compte.ajouterTransaction(transaction.get());
 
         this.fenetre.setData(this.compte.getTransactions());
+        this.fenetre.getOutilBar().setDateItems(this.compte.getAnneesExistantes(), this.compte.getMoisExistants());
         this.disableSauvegarder.setValue(false);
         this.statut.setValue("ajout d'une transacition OK");
       } else {
         this.statut.setValue("");
       }
     } else {
-      Dialogs.error("Assiatnt d'ajout de transaction", "Vous ne pouvez pas ajouter de transaction.", "Aucun compte n'est ouvert.");
+      Dialogs.error("Assitant d'ajout de transaction", "Vous ne pouvez pas ajouter de transaction.", "Aucun compte n'est ouvert.");
       this.statut.setValue("echec d'ajout d'une transaction");
+    }
+  }
+
+  /**
+   * Met à jour les informations en fonction des filtres de date.
+   * Appelée au click sur un des filtres mois ou année.
+   */
+  public void updateDates(String year, String month){
+    int annee = 0;
+    Month mois = null;
+    if (year != null && !year.equals("Toutes"))
+      annee = Integer.valueOf(year);
+    if (month != null && !month.equals("Tous"))
+      mois = Utils.toMonth(month);
+
+    this.statut.setValue("mise en place des filtres...");
+
+    if (this.compte != null){
+      this.fenetre.setData(this.compte.getTransactionsFiltrees(annee, mois));
+      this.statut.setValue("filtes OK");
+    } else {
+      Dialogs.error("Mise en place des filtres", "Vous ne pouvez pas filtrer les transactions.", "Aucun compte n'est ouvert.");
+      this.statut.setValue("echec de mise en place des filtres");
     }
   }
 
