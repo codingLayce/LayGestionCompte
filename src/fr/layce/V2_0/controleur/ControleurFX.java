@@ -3,6 +3,7 @@ package fr.layce.V2_0.controleur;
 import fr.layce.V2_0.modele.Compte;
 import fr.layce.V2_0.modele.Transaction;
 import fr.layce.V2_0.modele.Utils;
+import fr.layce.V2_0.modele.config.Config;
 import fr.layce.V2_0.modele.exceptions.TransactionException;
 import fr.layce.V2_0.vue.Fenetre;
 import fr.layce.V2_0.vue.dialog.AssistantTransaction;
@@ -33,6 +34,12 @@ public class ControleurFX {
   private SimpleBooleanProperty disableSauvegarderSous;
 
   private ControleurFX(){
+    try {
+      Config.create();
+    } catch (IOException e) {
+      Dialogs.errorMessage("Chargement des configurations", e);
+    }
+
     this.compte = null;
     this.fenetre = Fenetre.getInstance();
 

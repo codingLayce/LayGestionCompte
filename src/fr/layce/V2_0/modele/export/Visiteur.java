@@ -5,5 +5,5 @@ import fr.layce.V2_0.modele.Transaction;
 import java.io.IOException;
 
 public interface Visiteur {
-    public void visite(Transaction transaction) throws IOException;
+    void visite(Transaction transaction) throws IOException;
 }
