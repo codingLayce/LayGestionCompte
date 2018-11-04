@@ -7,7 +7,8 @@ abstract class ConfigProperty {
     this.key = key;
   }
 
-  public String getKey(){
+  String getKey(){
     return this.key;
   }
+
 }

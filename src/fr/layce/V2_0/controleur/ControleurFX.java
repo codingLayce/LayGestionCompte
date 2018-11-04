@@ -4,12 +4,14 @@ import fr.layce.V2_0.modele.Compte;
 import fr.layce.V2_0.modele.Transaction;
 import fr.layce.V2_0.modele.Utils;
 import fr.layce.V2_0.modele.config.Config;
+import fr.layce.V2_0.modele.config.StringConfig;
 import fr.layce.V2_0.modele.exceptions.TransactionException;
 import fr.layce.V2_0.vue.Fenetre;
 import fr.layce.V2_0.vue.dialog.AssistantTransaction;
 import fr.layce.V2_0.vue.dialog.Dialogs;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
 
@@ -28,6 +30,7 @@ public class ControleurFX {
 
   private Compte compte;
   private Fenetre fenetre;
+  private Config config;
 
   private SimpleStringProperty statut;
   private SimpleBooleanProperty disableSauvegarder;
@@ -36,6 +39,7 @@ public class ControleurFX {
   private ControleurFX(){
     try {
       Config.create();
+      this.config = Config.getInstance();
     } catch (IOException e) {
       Dialogs.errorMessage("Chargement des configurations", e);
     }
@@ -85,6 +89,7 @@ public class ControleurFX {
 
     FileChooser fc = new FileChooser();
     fc.setTitle("Sélectionner un fichier");
+    initDefaultDirectory(fc);
     fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichiers gestion de compte", "*.gtc"));
     File chosenFile = fc.showOpenDialog(null);
     if (chosenFile != null){
@@ -104,6 +109,7 @@ public class ControleurFX {
         this.disableSauvegarder.setValue(true);
 
         this.statut.setValue("Compte ouvert");
+        this.config.getProperty("LastDirectory").setConfig(chosenFile.getParent());
       } catch (IOException ex){
         Dialogs.errorMessage("Ouverture de compte", ex);
         this.statut.setValue("Impossible d'ouvrir le compte");
@@ -208,14 +214,17 @@ public class ControleurFX {
     if (this.compte != null){
       FileChooser fc = new FileChooser();
       fc.setTitle("Sauvegarder votre compte");
+      initDefaultDirectory(fc);
       fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Fichiers gestion de compte", "*.gtc"));
-      File chosenFile = fc.showOpenDialog(null);
+      File chosenFile = fc.showSaveDialog(null);
       if (chosenFile != null){
         try {
           this.compte.sauvegarderCompte(chosenFile);
 
           this.disableSauvegarder.setValue(true);
           this.statut.setValue("compte sauvegarder OK");
+
+          this.config.getProperty("LastDirectory").setConfig(chosenFile.getParent());
         } catch (IOException e) {
           Dialogs.errorMessage("Sauvegarder votre compte", e);
           this.statut.setValue("Sauvegarde du compte erreur");
@@ -297,6 +306,17 @@ public class ControleurFX {
           Dialogs.error("Sauvegarder compte", "Vous devez sélectionner une réponse.");
         }
       }
+    }
+  }
+
+  private void initDefaultDirectory(FileChooser fc){
+    try {
+      if (this.config.getProperty("LastDirectory").getConfig() != null)
+        fc.setInitialDirectory(new File((this.config.getProperty("LastDirectory")).getConfig()));
+      else
+        fc.setInitialDirectory(new File((this.config.getProperty("DefaultDirectory").getConfig())));
+    } catch (IOException ex){
+      Dialogs.errorMessage("Récupération de la configuration", ex);
     }
   }
 

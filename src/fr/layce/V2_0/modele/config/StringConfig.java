@@ -1,5 +1,7 @@
 package fr.layce.V2_0.modele.config;
 
+import java.io.FileNotFoundException;
+
 public class StringConfig extends ConfigProperty {
   private String config;
 
@@ -13,7 +15,8 @@ public class StringConfig extends ConfigProperty {
     return this.config;
   }
 
-  public void setConfig(String string){
+  public void setConfig(String string) throws FileNotFoundException {
     this.config = string;
+    Config.getInstance().saveConfig();
   }
 }
